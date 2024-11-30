@@ -1,0 +1,37 @@
+services:
+  postgresql:
+    image: postgres:16.1-alpine3.18
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: school
+    ports:
+      - "5432:5432"
+    volumes:
+      - ks_school_postgres_data:/var/lib/postgresql/data
+    networks:
+      - ks_school_net
+
+  pgadmin:
+    image: dpage/pgadmin4:8.12
+    container_name: pgadmin
+    depends_on:
+      - postgresql
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@school.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "9001:80"
+    volumes:
+      - ks_school_pgadmin_data:/var/lib/pgadmin
+    networks:
+      - ks_school_net
+
+volumes:
+  ks_school_postgres_data:
+  ks_school_pgadmin_data:
+
+networks:
+  ks_school_net:
+    driver: bridge
